@@ -1446,7 +1446,7 @@ static struct page *last_fsync_dnode(struct f2fs_sb_info *sbi, nid_t ino)
 	struct page *last_page = NULL;
 	int nr_pages;
 
-	pagevec_init(&pvec, 0);
+	pagevec_init(&pvec);
 	index = 0;
 
 	while ((nr_pages = pagevec_lookup_tag(&pvec, NODE_MAPPING(sbi), &index,
@@ -1672,7 +1672,7 @@ int f2fs_fsync_node_pages(struct f2fs_sb_info *sbi, struct inode *inode,
 			return PTR_ERR_OR_ZERO(last_page);
 	}
 retry:
-	pagevec_init(&pvec, 0);
+	pagevec_init(&pvec);
 	index = 0;
 
 	while ((nr_pages = pagevec_lookup_tag(&pvec, NODE_MAPPING(sbi), &index,
@@ -1819,7 +1819,7 @@ int f2fs_flush_inline_data(struct f2fs_sb_info *sbi)
 	int nr_pages;
 	int ret = 0;
 
-	pagevec_init(&pvec, 0);
+	pagevec_init(&pvec);
 
 	while ((nr_pages = pagevec_lookup_tag(&pvec,
 			NODE_MAPPING(sbi), &index, PAGECACHE_TAG_DIRTY))) {
@@ -1870,7 +1870,7 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
 	int ret = 0;
 	int nr_pages, done = 0;
 
-	pagevec_init(&pvec, 0);
+	pagevec_init(&pvec);
 
 next_step:
 	index = 0;
