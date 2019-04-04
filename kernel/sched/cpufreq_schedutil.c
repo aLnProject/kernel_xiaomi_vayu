@@ -234,8 +234,13 @@ static void sugov_get_util(unsigned long *util, unsigned long *max, int cpu,
 
 	max_cap = arch_scale_cpu_capacity(NULL, cpu);
 	*max = max_cap;
-
-	*util = boosted_cpu_util(cpu, &loadcpu->walt_load);
+ 
+#ifdef CONFIG_SCHED_TUNE
+	unsigned long util = stune_util(cpu->cpu, &loadcpu->walt_load);
+#else
+	unsigned long util = cpu_util_freq(cpu->cpu);
+#endif
+	unsigned long util_cfs = util - cpu_util_rt(rq);
 
 	if (likely(use_pelt())) {
 		sched_avg_update(rq);

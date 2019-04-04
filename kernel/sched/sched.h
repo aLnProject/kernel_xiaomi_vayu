@@ -2224,7 +2224,7 @@ cpu_util_freq(int cpu, struct sched_walt_cpu_load *walt_load)
 #endif /* CONFIG_SCHED_WALT */
 
 extern unsigned long
-boosted_cpu_util(int cpu, struct sched_walt_cpu_load *walt_load);
+stune_util(int cpu, struct sched_walt_cpu_load *walt_load);
 extern unsigned int capacity_margin_freq;
 
 static inline unsigned long
@@ -2847,6 +2847,13 @@ static inline int cpu_min_power_cost(int cpu)
 static inline bool hmp_capable(void)
 {
 	return max_possible_capacity != min_max_possible_capacity;
+}
+
+static inline unsigned long cpu_util_freq(int cpu)
+{
+	struct rq *rq = cpu_rq(cpu);
+
+	return min(cpu_util_cfs(rq) + cpu_util_rt(rq), capacity_orig_of(cpu));
 }
 
 static inline bool is_max_capacity_cpu(int cpu)
