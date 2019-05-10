@@ -1408,7 +1408,6 @@ static int update_client_paths(struct msm_bus_client *client, unsigned int idx)
 			if (dev)
 				msm_bus_commit_single(dev);
 		}
-
 	}
 	commit_data();
 exit_update_client_paths:
