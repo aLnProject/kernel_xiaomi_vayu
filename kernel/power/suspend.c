@@ -459,7 +459,7 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 
 	error = disable_nonboot_cpus();
 	if (error || suspend_test(TEST_CPUS)) {
-		log_suspend_abort_reason("Disabling non-boot cpus failed");
+		//log_suspend_abort_reason("Disabling non-boot cpus failed");
 		goto Enable_cpus;
 	}
 
@@ -657,7 +657,7 @@ int pm_suspend(suspend_state_t state)
 		return -EINVAL;
 
 	pm_suspend_marker("entry");
-	pr_info("suspend entry (%s)\n", mem_sleep_labels[state]);
+	pr_debug("suspend entry (%s)\n", mem_sleep_labels[state]);
 	error = enter_state(state);
 	if (error) {
 		suspend_stats.fail++;
@@ -666,7 +666,7 @@ int pm_suspend(suspend_state_t state)
 		suspend_stats.success++;
 	}
 	pm_suspend_marker("exit");
-	pr_info("suspend exit\n");
+	pr_debug("suspend exit\n");
 	measure_wake_up_time();
 	return error;
 }
