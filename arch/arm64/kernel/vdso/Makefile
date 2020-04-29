@@ -23,7 +23,7 @@ ccflags-y += $(DISABLE_LTO)
 
 # Force -O2 to avoid libgcc dependencies
 CFLAGS_REMOVE_vgettimeofday.o = -pg -Os
-CFLAGS_vgettimeofday.o = -fPIC
+CFLAGS_vgettimeofday.o = -fPIC -fasynchronous-unwind-tables
 ifeq ($(cc-name),clang)
 CFLAGS_vgettimeofday.o = -O3
 else
