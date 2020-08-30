@@ -1002,6 +1002,40 @@ And public attribution of xiaomi platforms(like J20S and so and)
 			};
 		};
 	};
+
+	pm8150b-ibat-lvl0 {
+		status = "disabled";
+	};
+	pm8150b-ibat-lvl1 {
+		status = "disabled";
+	};
+	pm8150b-vbat-lvl0 {
+		status = "disabled";
+	};
+	pm8150b-vbat-lvl1 {
+		status = "disabled";
+	};
+	pm8150b-vbat-lvl2 {
+		status = "disabled";
+	};
+	pm8150l-bcl-lvl0 {
+		status = "disabled";
+	};
+	pm8150l-bcl-lvl1 {
+		status = "disabled";
+	};
+	pm8150l-bcl-lvl2 {
+		status = "disabled";
+	};
+	lmh-dcvs-00 {
+		status = "disabled";
+	};
+	lmh-dcvs-01 {
+		status = "disabled";
+	};
+	soc {
+		status = "disabled";
+	};
 };
 
 &pm8150b_haptics {
