@@ -779,11 +779,14 @@ static void set_load_weight(struct task_struct *p)
  */
 static DEFINE_MUTEX(uclamp_mutex);
 
-/* Max allowed minimum utilization */
-unsigned int sysctl_sched_uclamp_util_min = SCHED_CAPACITY_SCALE;
+/*
+ * Minimum utilization for all tasks
+ * default: 0
+ */
+unsigned int sysctl_sched_uclamp_util_min;
 
 /* Max allowed maximum utilization */
-unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
+unsigned int sysctl_sched_uclamp_util_max = 100;
 
 /*
  * By default RT tasks run at the maximum performance point/capacity of the
@@ -800,7 +803,7 @@ unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
  * This knob will not override the system default sched_util_clamp_min defined
  * above.
  */
-unsigned int sysctl_sched_uclamp_util_min_rt_default = 500;
+unsigned int sysctl_sched_uclamp_util_min_rt_default = 35;
 
 /* All clamps are required to be less or equal than these values */
 static struct uclamp_se uclamp_default[UCLAMP_CNT];
@@ -1251,7 +1254,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
 {
 	bool update_root_tg = false;
 	int old_min, old_max, old_min_rt;
-	int result;
+	int result = 0;
 
 	mutex_lock(&uclamp_mutex);
 	old_min = sysctl_sched_uclamp_util_min;
