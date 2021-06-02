@@ -10865,7 +10865,6 @@ static inline void ufshcd_add_sysfs_nodes(struct ufs_hba *hba)
 {
 	ufshcd_add_rpm_lvl_sysfs_nodes(hba);
 	ufshcd_add_spm_lvl_sysfs_nodes(hba);
-	ufshcd_add_desc_sysfs_nodes(hba->dev);
 }
 
 static inline void ufshcd_remove_sysfs_nodes(struct ufs_hba *hba)
