@@ -131,6 +131,12 @@ struct msm_hsphy {
 	int			*emu_dcm_reset_seq;
 	int			emu_dcm_reset_seq_len;
 
+	/*xiaomi: debug fs for param_override_x0 to x3*/
+	u8			param_override_x0;
+	u8			param_override_x1;
+	u8			param_override_x2;
+	u8			param_override_x3;
+
 	/* debugfs entries */
 	struct dentry		*root;
 	u8			txvref_tune0;
@@ -418,6 +424,27 @@ static int msm_hsphy_init(struct usb_phy *uphy)
 	if (phy->param_override_seq)
 		hsusb_phy_write_seq(phy->base, phy->param_override_seq,
 				phy->param_override_seq_cnt, 0);
+
+	/* xiaomi: debug fs for override param_override_x0 to x3 */
+	if (phy->param_override_x0) {
+		writel_relaxed(phy->param_override_x0, phy->base + 0x6c);
+		pr_info("write 0x%02x to 0x6c(x0)\n", phy->param_override_x0);
+	}
+
+	if (phy->param_override_x1) {
+		writel_relaxed(phy->param_override_x1, phy->base + 0x70);
+		pr_info("write 0x%02x to 0x70(x1)\n", phy->param_override_x1);
+	}
+
+	if (phy->param_override_x2) {
+		writel_relaxed(phy->param_override_x2, phy->base + 0x74);
+		pr_info("write 0x%02x to 0x74(x2)\n", phy->param_override_x2);
+	}
+
+	if (phy->param_override_x3) {
+		writel_relaxed(phy->param_override_x3, phy->base + 0x78);
+		pr_info("write 0x%02x to 0x78(x3)\n", phy->param_override_x3);
+	}
 
 	if (phy->pre_emphasis) {
 		u8 val = TXPREEMPAMPTUNE0(phy->pre_emphasis) &
@@ -744,6 +771,16 @@ static void msm_hsphy_create_debugfs(struct msm_hsphy *phy)
 	phy->root = debugfs_create_dir(dev_name(phy->phy.dev), NULL);
 	debugfs_create_x8("pre_emphasis", 0644, phy->root, &phy->pre_emphasis);
 	debugfs_create_x8("txvref_tune0", 0644, phy->root, &phy->txvref_tune0);
+
+	/*xiaomi: debug fs for param_override_x */
+	debugfs_create_x8("param_override_x0", 0644, phy->root,
+						&phy->param_override_x0);
+	debugfs_create_x8("param_override_x1", 0644, phy->root,
+						&phy->param_override_x1);
+	debugfs_create_x8("param_override_x2", 0644, phy->root,
+						&phy->param_override_x2);
+	debugfs_create_x8("param_override_x3", 0644, phy->root,
+						&phy->param_override_x3);
 	debugfs_create_x8("param_ovrd0", 0644, phy->root, &phy->param_ovrd0);
 	debugfs_create_x8("param_ovrd1", 0644, phy->root, &phy->param_ovrd1);
 	debugfs_create_x8("param_ovrd2", 0644, phy->root, &phy->param_ovrd2);
@@ -983,6 +1020,8 @@ static int msm_hsphy_remove(struct platform_device *pdev)
 
 	msm_hsphy_enable_clocks(phy, false);
 	msm_hsphy_enable_power(phy, false);
+	kfree(phy);
+
 	return 0;
 }
 
