@@ -469,7 +469,7 @@ static int bq2597x_enable_wdt(struct bq2597x *bq, bool enable)
 }
 EXPORT_SYMBOL_GPL(bq2597x_enable_wdt);
 
-static int bq2597x_set_wdt(struct bq2597x *bq, int ms)
+int bq2597x_set_wdt(struct bq2597x *bq, int ms)
 {
 	int ret;
 	u8 val;
@@ -1101,7 +1101,7 @@ static int bq2597x_set_alarm_int_mask(struct bq2597x *bq, u8 mask)
 }
 EXPORT_SYMBOL_GPL(bq2597x_set_alarm_int_mask);
 
-static int bq2597x_clear_alarm_int_mask(struct bq2597x *bq, u8 mask)
+int bq2597x_clear_alarm_int_mask(struct bq2597x *bq, u8 mask)
 {
 	int ret;
 	u8 val;
@@ -1135,7 +1135,7 @@ static int bq2597x_set_fault_int_mask(struct bq2597x *bq, u8 mask)
 }
 EXPORT_SYMBOL_GPL(bq2597x_set_fault_int_mask);
 
-static int bq2597x_clear_fault_int_mask(struct bq2597x *bq, u8 mask)
+int bq2597x_clear_fault_int_mask(struct bq2597x *bq, u8 mask)
 {
 	int ret;
 	u8 val;
@@ -2444,4 +2444,3 @@ module_i2c_driver(bq2597x_charger_driver);
 MODULE_DESCRIPTION("TI BQ2597x Charger Driver");
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Texas Instruments");
-
