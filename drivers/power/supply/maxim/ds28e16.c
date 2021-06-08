@@ -31,10 +31,10 @@
 #include <linux/regmap.h>
 #include <linux/random.h>
 
-#define ds_info	pr_err
-#define ds_dbg	pr_err
+#define ds_info	pr_info
+#define ds_dbg	pr_debug
 #define ds_err	pr_err
-#define ds_log	pr_err
+#define ds_log	pr_debug
 
 struct ds28e16_data {
 	struct platform_device *pdev;
@@ -631,9 +631,9 @@ int DS28E16_cmd_device_disable(int op, unsigned char *password)
 /// 'Compute and Read Page Authentication' command
 ///
 /// @param[in] anon - boolean parameter
-/// @param[in] pg - Page number   2,计数�? 0,page0; 1,page1;
+/// @param[in] pg - Page number   2,计数�? 0,page0; 1,page1;
 /// @param[in] challenge
-/// @param[out] hmac   返回的计算结�?2个字�?///
+/// @param[out] hmac   返回的计算结�?2个字�?///
 /// @return
 /// DS_TRUE - command successful @n
 /// DS_FALSE - command failed

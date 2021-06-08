@@ -32,15 +32,9 @@
 	pr_err("%s: %s: " fmt, chg->name,	\
 		__func__, ##__VA_ARGS__)	\
 
-#define smblib_dbg(chg, reason, fmt, ...)			\
-	do {							\
-		if (*chg->debug_mask & (reason))		\
-			pr_info("%s: %s: " fmt, chg->name,	\
-				__func__, ##__VA_ARGS__);	\
-		else						\
-			pr_debug("%s: %s: " fmt, chg->name,	\
-				__func__, ##__VA_ARGS__);	\
-	} while (0)
+#define smblib_dbg(chg, reason, fmt, ...)	\
+	pr_debug("%s: %s: " fmt, chg->name,	\
+		__func__, ##__VA_ARGS__)	\
 
 #define typec_rp_med_high(chg, typec_mode)			\
 	((typec_mode == POWER_SUPPLY_TYPEC_SOURCE_MEDIUM	\
@@ -923,7 +917,7 @@ int smblib_set_fastcharge_mode(struct smb_charger *chg, bool enable)
 	}
 	batt_temp = pval.intval;
 	if (enable && (pval.intval >= chg->ffc_high_tbat || pval.intval <= chg->ffc_low_tbat)) {
-		pr_info("tbat out of range, don't enable ffc\n");
+		pr_debug("tbat out of range, don't enable ffc\n");
 		enable = false;
 	}
 
@@ -962,7 +956,7 @@ set_term:
 	rc = vote(chg->fv_votable, PD_VERIFED_VOTER,
 			!enable, PD_UNVERIFED_VOLTAGE);
 
-	pr_info("fastcharge mode:%d termi:%d\n", enable, termi);
+	pr_debug("fastcharge mode:%d termi:%d\n", enable, termi);
 
 	return 0;
 }
@@ -1814,8 +1808,6 @@ int smblib_set_icl_current(struct smb_charger *chg, int icl_ua)
 	if (smblib_get_prop_typec_mode(chg) ==
 			    POWER_SUPPLY_TYPEC_SINK_DEBUG_ACCESSORY)
 		return 0;
-
-	pr_info("icl_ua value is: %d\n", icl_ua);
 
 	if (suspend)
 		return smblib_set_usb_suspend(chg, true);
@@ -3465,10 +3457,6 @@ static int smblib_therm_charging(struct smb_charger *chg)
 			pr_err("Couldn't disable USB thermal ICL vote rc=%d\n",
 				rc);
 	} else {
-		pr_info("thermal_icl_ua is %d, chg->system_temp_level: %d\n",
-				thermal_icl_ua, chg->system_temp_level);
-		pr_info("thermal_fcc_ua is %d\n", thermal_fcc_ua);
-
 		if (chg->real_charger_type == POWER_SUPPLY_TYPE_USB_HVDCP_3
 				|| chg->real_charger_type == POWER_SUPPLY_TYPE_USB_HVDCP_3P5
 				|| ((chg->cp_reason == POWER_SUPPLY_CP_PPS || chg->use_bq_pump)
@@ -5009,7 +4997,6 @@ bool smblib_rsbux_low(struct smb_charger *chg, int r_thr)
 		goto cleanup;
 	}
 
-	pr_info("r_sbu1 val is %d\n", r_sbu1);
 	if (r_sbu1 < r_thr) {
 		ret = true;
 		goto cleanup;
@@ -5028,7 +5015,6 @@ bool smblib_rsbux_low(struct smb_charger *chg, int r_thr)
 		goto cleanup;
 	}
 
-	pr_info("r_sbu2 val is %d\n", r_sbu2);
 	if (r_sbu2 < r_thr)
 		ret = true;
 cleanup:
@@ -6968,9 +6954,6 @@ static int check_reduce_fcc_condition(struct smb_charger *chg)
 	}
 	chg->batt_health = val.intval;
 
-	pr_info("cp_charge_enabled(%d), charge_status(%d), charge_type(%d), batt_health(%d)\n",
-			chg->cp_charge_enabled, chg->charge_status, chg->charge_type, chg->batt_health);
-
 	/* should add battery health later */
 	if (!chg->cp_charge_enabled ||
 		(chg->charge_status != POWER_SUPPLY_STATUS_CHARGING) ||
@@ -7021,7 +7004,7 @@ static void reduce_fcc_work(struct work_struct *work)
 		chg->esr_work_status = ESR_CHECK_FCC_NOLIMIT;
 		reduce_fcc = false;
 		esr_work_time = ESR_WORK_TIME_180S;
-		pr_info("calculate esr condition not satisfy.\n");
+		pr_debug("calculate esr condition not satisfy.\n");
 	}
 
 	vote(chg->fcc_votable, ESR_WORK_VOTER, reduce_fcc, effective_fcc);
@@ -7358,7 +7341,6 @@ static void smblib_raise_qc3_vbus_work(struct work_struct *work)
 		}
 
 		usb_present = val.intval;
-		pr_info("usb_present is %d\n", usb_present);
 		if (!usb_present) {
 			chg->raise_vbus_to_detect = false;
 			rc = smblib_force_vbus_voltage(chg, FORCE_5V_BIT);
@@ -7371,7 +7353,6 @@ static void smblib_raise_qc3_vbus_work(struct work_struct *work)
 		if (rc < 0)
 			pr_err("Couldn't get usb voltage rc=%d\n", rc);
 		vbus_now = val.intval;
-		pr_info("vbus_now is %d\n", vbus_now);
 
 		if (chg->snk_debug_acc_detected && usb_present)
 			vol_qc_ab_thr = VOL_THR_FOR_QC_CLASS_AB
@@ -9891,7 +9872,6 @@ static void smblib_lpd_ra_open_work(struct work_struct *work)
 	/* quit if moisture status is gone or in attached state */
 	if (!(stat & TYPEC_WATER_DETECTION_STATUS_BIT)
 			|| (stat & TYPEC_TCCDEBOUNCE_DONE_STATUS_BIT)) {
-		pr_info("quit if moisture status is gone: stat val is 0x%x\n", stat);
 		chg->lpd_stage = LPD_STAGE_NONE;
 		chg->lpd_status = false;
 

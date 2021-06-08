@@ -698,7 +698,7 @@ static void smb1390_status_change_work(struct work_struct *work)
 		}
 		charge_type = pval.intval;
 
-		pr_info("capacity:%d, batt_temp:%d, charge_type:%d\n",
+		pr_debug("capacity:%d, batt_temp:%d, charge_type:%d\n",
 				capacity, batt_temp, charge_type);
 
 		/*

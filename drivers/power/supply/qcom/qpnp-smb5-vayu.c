@@ -528,13 +528,13 @@ static int smb5_parse_dt(struct smb5 *chip)
 
 	rc = of_property_read_u32(node, "mi,ffc-low-tbat", &chg->ffc_low_tbat);
 	if (rc < 0) {
-		pr_info("use default ffc_low_tbat\n");
+		pr_debug("use default ffc_low_tbat\n");
 		chg->ffc_low_tbat = DEFAULT_FFC_LOW_TBAT;
 	}
 
 	rc = of_property_read_u32(node, "mi,ffc-high-tbat", &chg->ffc_high_tbat);
 	if (rc < 0) {
-		pr_info("use default ffc_high_tbat\n");
+		pr_debug("use default ffc_high_tbat\n");
 		chg->ffc_high_tbat = DEFAULT_FFC_HIGH_TBAT;
 	}
 
@@ -2195,7 +2195,7 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 		rc = smblib_get_prop_battery_bq_input_suspend(chg, val);
 		break;
 	default:
-		pr_err("batt power supply prop %d not supported\n", psp);
+		pr_debug("batt power supply prop %d not supported\n", psp);
 		return -EINVAL;
 	}
 
