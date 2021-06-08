@@ -54,15 +54,6 @@
 
 #include "cp_qc30.h"
 
-#ifdef pr_debug
-#undef pr_debug
-#define pr_debug pr_err
-#endif
-#ifdef pr_info
-#undef pr_info
-#define pr_info pr_err
-#endif
-
 #define BATT_MAX_CHG_VOLT		4400
 #define BATT_FAST_CHG_CURR		5400
 #define	BUS_OVP_THRESHOLD		12000
@@ -158,7 +149,7 @@ static int cp_get_effective_fcc_val(pm_t pm_state)
 
 	effective_fcc_val = get_effective_result(pm_state.fcc_votable);
 	effective_fcc_val = effective_fcc_val / 1000;
-	pr_info("effective_fcc_val: %d\n", effective_fcc_val);
+	pr_debug("effective_fcc_val: %d\n", effective_fcc_val);
 	return effective_fcc_val;
 }
 
@@ -663,10 +654,10 @@ static int cp_flash2_charge(unsigned int port)
 	qc3_get_bms_fastcharge_mode();
 	if (pm_state.bms_fastcharge_mode)
 		sys_config.bat_volt_lp_lmt = sys_config.ffc_bat_volt_lmt;
-	pr_info("bat_volt_lp_lmt = %d\n", sys_config.bat_volt_lp_lmt);
-	pr_info("ibus_limit: %d\n", ibus_limit);
+	pr_debug("bat_volt_lp_lmt = %d\n", sys_config.bat_volt_lp_lmt);
+	pr_debug("ibus_limit: %d\n", ibus_limit);
 
-	pr_info("vbus=%d, ibus=%d, vbat=%d, ibat=%d, ibus_target_val=%d\n",
+	pr_debug("vbus=%d, ibus=%d, vbat=%d, ibat=%d, ibus_target_val=%d\n",
 				pm_state.bq2597x.vbus_volt,
 				pm_state.bq2597x.ibus_curr,
 				pm_state.bq2597x.vbat_volt,
@@ -676,9 +667,9 @@ static int cp_flash2_charge(unsigned int port)
 	qc3_check_slowly_charging_enabled();
 
 	pm_state.is_temp_out_fc2_range = qc3_disable_cp_by_jeita_status();
-	pr_info("is_temp_out_fc2_range:%d\n", pm_state.is_temp_out_fc2_range);
+	pr_debug("is_temp_out_fc2_range:%d\n", pm_state.is_temp_out_fc2_range);
 
-	pr_info("bq2597x bat_ovp_fault: %d,bat_ocp_fault =%d,bus_ovp_fault=%d,bus_ocp_fault=%d,bat_ucp_alarm=%d,vbat_reg=%d\n",
+	pr_debug("bq2597x bat_ovp_fault: %d,bat_ocp_fault =%d,bus_ovp_fault=%d,bus_ocp_fault=%d,bat_ucp_alarm=%d,vbat_reg=%d\n",
 				pm_state.bq2597x.bat_ovp_fault,
 				pm_state.bq2597x.bat_ocp_fault,
 				pm_state.bq2597x.bus_ovp_fault,
@@ -694,7 +685,7 @@ static int cp_flash2_charge(unsigned int port)
 			sys_config.ibat_minus_deviation_val = 1050;
 			sys_config.ibat_plus_deviation_val = 50;
 			pm_state.batt_cell_volt_triggered = true;
-			pr_info("batt cell volt > 4200mv or batt soc > 29%, modify bq qc3 adjust parameters\n");
+			pr_debug("batt cell volt > 4200mv or batt soc > 29%, modify bq qc3 adjust parameters\n");
 		}
 	}
 
@@ -788,9 +779,9 @@ void cp_statemachine(unsigned int port)
 	if (!pm_state.bq2597x.vbus_pres) {
 		pm_state.state = CP_STATE_DISCONNECT;
 		recovery = true;
-		pr_info("vbus disconnected\n");
+		pr_debug("vbus disconnected\n");
 	} else if (pm_state.state == CP_STATE_DISCONNECT) {
-		pr_info("vbus connected\n");
+		pr_debug("vbus connected\n");
 		recovery = true;
 		pm_state.jeita_triggered = false;
 		pm_state.is_temp_out_fc2_range = false;
@@ -832,7 +823,7 @@ void cp_statemachine(unsigned int port)
 		qc3_get_batt_current_thermal_level(&thermal_level);
 		qc3_check_slowly_charging_enabled();
 		pm_state.is_temp_out_fc2_range = qc3_disable_cp_by_jeita_status();
-		pr_info("is_temp_out_fc2_range:%d\n", pm_state.is_temp_out_fc2_range);
+		pr_debug("is_temp_out_fc2_range:%d\n", pm_state.is_temp_out_fc2_range);
 
 		if (pm_state.usb_type == POWER_SUPPLY_TYPE_USB_HVDCP_3) {
 			pr_info("vbus_volt:%d\n", pm_state.bq2597x.vbus_volt);
@@ -876,7 +867,7 @@ void cp_statemachine(unsigned int port)
 	case CP_STATE_SW_LOOP:
 		qc3_get_batt_current_thermal_level(&thermal_level);
 		if (retry_enable_bq_count >= 5) {
-			pr_info("retry_enable_bq_count=%d\n", retry_enable_bq_count);
+			pr_debug("retry_enable_bq_count=%d\n", retry_enable_bq_count);
 			break;
 		}
 
@@ -1208,4 +1199,3 @@ module_exit(cp_qc30_exit);
 MODULE_AUTHOR("Fei Jiang<jiangfei1@xiaomi.com>");
 MODULE_DESCRIPTION("Xiaomi cp qc30");
 MODULE_LICENSE("GPL");
-

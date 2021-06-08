@@ -834,7 +834,7 @@ static int handle_jeita(struct step_chg_info *chip)
 		goto set_jeita_fv;
 	}
 
-	pr_info("%s = %d FCC = %duA FV = %duV\n",
+	pr_debug("%s = %d FCC = %duA FV = %duV\n",
 		chip->jeita_fcc_config->param.prop_name, pval.intval, fcc_ua, fv_uv);
 	/*
 	 * Suspend USB input path if battery voltage is above
