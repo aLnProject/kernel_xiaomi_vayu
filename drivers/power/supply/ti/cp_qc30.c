@@ -195,7 +195,7 @@ static int qc3_get_bms_fastcharge_mode(void)
 	rc = power_supply_get_property(pm_state.bms_psy,
 				POWER_SUPPLY_PROP_FASTCHARGE_MODE, &pval);
 	if (rc < 0) {
-		pr_info("Couldn't get fastcharge mode:%d\n", rc);
+		pr_err("Couldn't get fastcharge mode:%d\n", rc);
 		return 0;
 	}
 
@@ -220,11 +220,11 @@ static int qc3_get_batt_current_thermal_level(int *level)
 			POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT, &val);
 
 	if (rc < 0) {
-		pr_info("Couldn't get themal level:%d\n", rc);
+		pr_err("Couldn't get themal level:%d\n", rc);
 		return rc;
 	}
 
-	pr_err("val.intval: %d\n", val.intval);
+	pr_debug("val.intval: %d\n", val.intval);
 
 	*level = val.intval;
 	return rc;
@@ -255,12 +255,12 @@ static bool qc3_disable_cp_by_jeita_status(void)
 			POWER_SUPPLY_PROP_TEMP, &val);
 
 	if (ret < 0) {
-		pr_info("Couldn't get batt temp prop:%d\n", ret);
+		pr_err("Couldn't get batt temp prop:%d\n", ret);
 		return false;
 	}
 
 	batt_temp = val.intval;
-	pr_err("batt_temp: %d\n", batt_temp);
+	pr_debug("batt_temp: %d\n", batt_temp);
 
 	if (bq_input_suspend) {
 		return true;
@@ -487,7 +487,7 @@ static int cp_check_fc_enabled(void)
 	if (!ret)
 		pm_state.bq2597x.charge_enabled = !!val.intval;
 
-	pr_info("pm_state.bq2597x.charge_enabled: %d\n",
+	pr_debug("pm_state.bq2597x.charge_enabled: %d",
 			pm_state.bq2597x.charge_enabled);
 	return ret;
 }
@@ -507,7 +507,7 @@ static int cp_check_sw_enabled(void)
 	if (!ret)
 		pm_state.sw_chager.charge_enabled = !!val.intval;
 
-	pr_info("pm_state.sw_chager.charge_enabled: %d\n",
+	pr_debug("pm_state.sw_chager.charge_enabled: %d\n",
 			pm_state.sw_chager.charge_enabled);
 	return ret;
 }
@@ -527,7 +527,7 @@ static int cp_check_sw_limited(void)
 	if (!ret)
 		pm_state.sw_chager.charge_limited = !!val.intval;
 
-	pr_info("pm_state.sw_chager.charge_limited: %d\n",
+	pr_debug("pm_state.sw_chager.charge_limited: %d\n",
 			pm_state.sw_chager.charge_limited);
 	return ret;
 }
@@ -634,7 +634,8 @@ static int cp_get_qc_hvdcp3_type(void)
 			POWER_SUPPLY_PROP_HVDCP3_TYPE, &val);
 	if (!ret)
 		pm_state.hvdcp3_type = val.intval;
-	pr_info("hvdcp3 type %s\n", pm_state.hvdcp3_type);
+
+	pr_debug("hvdcp3 type %s\n", pm_state.hvdcp3_type);
 	return ret;
 }
 
