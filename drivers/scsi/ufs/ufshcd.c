@@ -369,6 +369,12 @@ ufs_get_pm_lvl_to_link_pwr_state(enum ufs_pm_level lvl)
 	return ufs_pm_lvl_states[lvl].link_state;
 }
 
+#if 1
+static inline void ufshcd_wb_toggle_flush(struct ufs_hba *hba)
+{
+	return;
+}
+#else
 static inline void ufshcd_wb_toggle_flush(struct ufs_hba *hba)
 {
 	/*
@@ -382,7 +388,14 @@ static inline void ufshcd_wb_toggle_flush(struct ufs_hba *hba)
 	else
 		ufshcd_wb_buf_flush_disable(hba);
 }
+#endif
 
+#if 1
+static inline void ufshcd_wb_config(struct ufs_hba *hba)
+{
+	return;
+}
+#else
 static inline void ufshcd_wb_config(struct ufs_hba *hba)
 {
 	int ret;
@@ -402,6 +415,7 @@ static inline void ufshcd_wb_config(struct ufs_hba *hba)
 			"%s: En Write-Booster flush during H8: failed : %d\n",
 			__func__, ret);
 }
+#endif
 
 static inline void ufshcd_set_card_online(struct ufs_hba *hba)
 {
@@ -7047,6 +7061,12 @@ out:
 				__func__, err);
 }
 
+#if 1
+static bool ufshcd_wb_sup(struct ufs_hba *hba)
+{
+	return false;
+}
+#else
 static bool ufshcd_wb_sup(struct ufs_hba *hba)
 {
 #if defined(CONFIG_UFSTW)
@@ -7062,7 +7082,14 @@ static bool ufshcd_wb_sup(struct ufs_hba *hba)
 		  (hba->dev_info.b_wb_buffer_type
 		   || hba->dev_info.wb_config_lun));
 }
+#endif
 
+#if 1
+static int ufshcd_wb_ctrl(struct ufs_hba *hba, bool enable)
+{
+	return 1;
+}
+#else
 static int ufshcd_wb_ctrl(struct ufs_hba *hba, bool enable)
 {
 	int ret;
@@ -7090,7 +7117,14 @@ static int ufshcd_wb_ctrl(struct ufs_hba *hba, bool enable)
 
 	return ret;
 }
+#endif
 
+#if 1
+static int ufshcd_wb_toggle_flush_during_h8(struct ufs_hba *hba, bool set)
+{
+	return 1;
+}
+#else
 static int ufshcd_wb_toggle_flush_during_h8(struct ufs_hba *hba, bool set)
 {
 	int val, ret;
@@ -7111,7 +7145,14 @@ static int ufshcd_wb_toggle_flush_during_h8(struct ufs_hba *hba, bool set)
 	return ret;
 
 }
+#endif
 
+#if 1
+static int ufshcd_wb_buf_flush_enable(struct ufs_hba *hba)
+{
+	return 0;
+}
+#else
 static int ufshcd_wb_buf_flush_enable(struct ufs_hba *hba)
 {
 	int ret;
@@ -7128,7 +7169,14 @@ static int ufshcd_wb_buf_flush_enable(struct ufs_hba *hba)
 
 	return ret;
 }
+#endif
 
+#if 1
+static int ufshcd_wb_buf_flush_disable(struct ufs_hba *hba)
+{
+	return 0;
+}
+#else
 static int ufshcd_wb_buf_flush_disable(struct ufs_hba *hba)
 {
 	int ret;
@@ -7145,7 +7193,14 @@ static int ufshcd_wb_buf_flush_disable(struct ufs_hba *hba)
 
 	return ret;
 }
+#endif
 
+#if 1
+static bool ufshcd_wb_is_buf_flush_needed(struct ufs_hba *hba)
+{
+	return false;
+}
+#else
 static bool ufshcd_wb_is_buf_flush_needed(struct ufs_hba *hba)
 {
 	int ret;
@@ -7219,6 +7274,7 @@ static bool ufshcd_wb_is_buf_flush_needed(struct ufs_hba *hba)
 	}
 	return false;
 }
+#endif
 
 /**
  * ufshcd_exception_event_handler - handle exceptions raised by device
