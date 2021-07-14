@@ -1594,7 +1594,11 @@ static int smb5_usb_main_get_prop(struct power_supply *psy,
 		val->intval = chg->flash_active;
 		break;
 	case POWER_SUPPLY_PROP_FLASH_TRIGGER:
-		rc = schgm_flash_get_vreg_ok(chg, &val->intval);
+		if (chg->chg_param.smb_version != PMI632_SUBTYPE) {
+			rc = -ENODEV;
+		} else {
+			rc = schgm_flash_get_vreg_ok(chg, &val->intval);
+		}
 		break;
 	case POWER_SUPPLY_PROP_TOGGLE_STAT:
 		val->intval = 0;
