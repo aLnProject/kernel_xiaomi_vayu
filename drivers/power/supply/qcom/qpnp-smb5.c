@@ -2143,8 +2143,10 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 		val->intval = chg->fcc_stepper_enable;
 		break;
 	case POWER_SUPPLY_PROP_LIQUID_DETECTION:
+		val->intval = 0;
 		break;
 	case POWER_SUPPLY_PROP_DYNAMIC_FV_ENABLED:
+		val->intval = 0;
 		break;
 	case POWER_SUPPLY_PROP_BATTERY_CHARGING_ENABLED:
 		rc = smblib_get_prop_battery_charging_enabled(chg, val);
