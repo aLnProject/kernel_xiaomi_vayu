@@ -1855,11 +1855,13 @@ static int smb5_dc_get_prop(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_DC_RESET:
 		val->intval = 0;
 		break;
-#if 0
 	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_REGULATION:
+#ifdef CONFIG_MACH_XIAOMI_VAYU
+		val->intval = 0;
+#else
 		rc = smblib_get_prop_voltage_wls_output(chg, val);
-		break;
 #endif
+		break;
 	default:
 		return -EINVAL;
 	}
