@@ -133,7 +133,7 @@ enum print_reason {
 #define MAX_PULSE			38
 #define MAX_PLUSE_COUNT_ALLOWED		30
 #define HIGH_NUM_PULSE_THR		12
-#if defined(CONFIG_QPNP_SMB5_VAYU)
+#ifdef CONFIG_MACH_XIAOMI_VAYU
 #define PD_UNVERIFED_CURRENT           4800000
 #else
 #define PD_UNVERIFED_CURRENT		3000000
