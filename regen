@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+export ARCH=arm64
+
+make O=out vayu_defconfig
+cp out/.config arch/arm64/configs/vayu_defconfig
+
+if [ ! -z $@ ]; then
+  git commit -asm "defconfig: vayu: Regenerate"
+fi
