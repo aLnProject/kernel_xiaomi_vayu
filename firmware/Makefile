@@ -20,7 +20,6 @@ fw-external-y := $(subst $(quote),,$(CONFIG_EXTRA_FIRMWARE))
 # For the former two cases we want $(fw-shipped-y) and $(fw-shipped-m) to be
 # accurate. In the latter case it doesn't matter -- it'll use $(fw-shipped-all).
 # But be aware that the config file might not be included at all.
-fw-shipped-$(CONFIG_INPUT_PRESS_NDT) += ndt_fw.bin
 fw-shipped-$(CONFIG_TOUCHSCREEN_NT36xxx_HOSTDL_SPI) += j20s_novatek_ts_fw01.bin
 fw-shipped-$(CONFIG_TOUCHSCREEN_NT36xxx_HOSTDL_SPI) += j20s_novatek_ts_fw02.bin
 
