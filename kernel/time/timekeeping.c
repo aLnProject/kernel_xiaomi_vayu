@@ -711,7 +711,7 @@ static void timekeeping_forward_now(struct timekeeper *tk)
 int __getnstimeofday64(struct timespec64 *ts)
 {
 	struct timekeeper *tk = &tk_core.timekeeper;
-	unsigned long seq;
+	unsigned int seq;
 	u64 nsecs;
 
 	do {
@@ -819,7 +819,7 @@ EXPORT_SYMBOL_GPL(ktime_get_with_offset);
 ktime_t ktime_mono_to_any(ktime_t tmono, enum tk_offsets offs)
 {
 	ktime_t *offset = offsets[offs];
-	unsigned long seq;
+	unsigned int seq;
 	ktime_t tconv;
 
 	do {
@@ -950,7 +950,7 @@ time64_t __ktime_get_real_seconds(void)
 void ktime_get_snapshot(struct system_time_snapshot *systime_snapshot)
 {
 	struct timekeeper *tk = &tk_core.timekeeper;
-	unsigned long seq;
+	unsigned int seq;
 	ktime_t base_raw;
 	ktime_t base_real;
 	u64 nsec_raw;
@@ -1111,7 +1111,7 @@ int get_device_system_crosststamp(int (*get_time_fn)
 	ktime_t base_real, base_raw;
 	u64 nsec_real, nsec_raw;
 	u8 cs_was_changed_seq;
-	unsigned long seq;
+	unsigned int seq;
 	bool do_interp;
 	int ret;
 
@@ -1382,7 +1382,7 @@ int timekeeping_notify(struct clocksource *clock)
 void getrawmonotonic64(struct timespec64 *ts)
 {
 	struct timekeeper *tk = &tk_core.timekeeper;
-	unsigned long seq;
+	unsigned int seq;
 	u64 nsecs;
 
 	do {
@@ -1404,7 +1404,7 @@ EXPORT_SYMBOL(getrawmonotonic64);
 int timekeeping_valid_for_hres(void)
 {
 	struct timekeeper *tk = &tk_core.timekeeper;
-	unsigned long seq;
+	unsigned int seq;
 	int ret;
 
 	do {
@@ -1423,7 +1423,7 @@ int timekeeping_valid_for_hres(void)
 u64 timekeeping_max_deferment(void)
 {
 	struct timekeeper *tk = &tk_core.timekeeper;
-	unsigned long seq;
+	unsigned int seq;
 	u64 ret;
 
 	do {
@@ -2162,7 +2162,7 @@ struct timespec64 current_kernel_time64(void)
 {
 	struct timekeeper *tk = &tk_core.timekeeper;
 	struct timespec64 now;
-	unsigned long seq;
+	unsigned int seq;
 
 	do {
 		seq = read_seqcount_begin(&tk_core.seq);
@@ -2178,7 +2178,7 @@ struct timespec64 get_monotonic_coarse64(void)
 {
 	struct timekeeper *tk = &tk_core.timekeeper;
 	struct timespec64 now, mono;
-	unsigned long seq;
+	unsigned int seq;
 
 	do {
 		seq = read_seqcount_begin(&tk_core.seq);
