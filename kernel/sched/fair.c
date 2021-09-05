@@ -6726,7 +6726,8 @@ wake_affine_idle(int this_cpu, int prev_cpu, int sync)
 {
 	/*
 	 * If this_cpu is idle, it implies the wakeup is from interrupt
-	 * context. Only allow the move if cache is shared. Otherwise an
+	 * context. Only allow the move if cache is shared and the interrupted
+	 * task is on a prime core (single core cluster). Otherwise an
 	 * interrupt intensive workload could force all tasks onto one
 	 * node depending on the IO topology or IRQ affinity settings.
 	 *
@@ -6736,7 +6737,8 @@ wake_affine_idle(int this_cpu, int prev_cpu, int sync)
 	 * a cpufreq perspective, it's better to have higher utilisation
 	 * on one CPU.
 	 */
-	if (idle_cpu(this_cpu) && cpus_share_cache(this_cpu, prev_cpu))
+	if (idle_cpu(this_cpu) && cpus_share_cache(this_cpu, prev_cpu)
+		&& !cpumask_test_cpu(prev_cpu, cpu_prime_mask))
 		return idle_cpu(prev_cpu) ? prev_cpu : this_cpu;
 
 	if (sync && cpu_rq(this_cpu)->nr_running == 1)
