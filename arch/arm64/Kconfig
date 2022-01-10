@@ -1473,6 +1473,13 @@ config BUILD_ARM64_DT_OVERLAY
 	depends on OF
 	help
 	  This option enables support for DT overlay compilation.
+
+config BUILD_ARM64_DTBO_IMG
+	bool "Include dtbo.img"
+	default n
+	depends on BUILD_ARM64_DT_OVERLAY
+	help
+	  This option will build dtbo.img
 endmenu
 
 menu "Userspace binary formats"
