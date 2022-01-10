@@ -18,7 +18,11 @@ include $(srctree)/arch/arm64/boot/dts/Makefile
 
 OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
 
-targets := Image Image.bz2 Image.gz Image.lz4 Image.lzma Image.lzo dtbo.img
+targets := Image Image.bz2 Image.gz Image.lz4 Image.lzma Image.lzo
+
+ifeq ($(CONFIG_BUILD_ARM64_DTBO_IMG),y)
+targets += dtbo.img
+endif
 
 DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM64_APPENDED_DTB_IMAGE_NAMES))
 ifneq ($(DTB_NAMES),)
@@ -28,7 +32,9 @@ DTB_LIST := $(dtb-y)
 endif
 DTB_OBJS := $(shell find $(obj)/dts/ -name \*.dtb)
 
+ifeq ($(CONFIG_BUILD_ARM64_DTBO_IMG),y)
 DTBO_OBJS := $(shell find $(obj)/dts/ -name \*.dtbo)
+endif
 
 # Add RTIC DTB to the DTB list if RTIC MPGen is enabled
 # Note, we keep this for compatibility with
@@ -70,8 +76,10 @@ $(obj)/Image.lzo: $(obj)/Image FORCE
 $(obj)/Image.gz-dtb: $(obj)/Image.gz $(DTB_OBJS) FORCE
 	$(call if_changed,cat)
 
+ifeq ($(CONFIG_BUILD_ARM64_DTBO_IMG),y)
 $(obj)/dtbo.img: $(DTBO_OBJS) FORCE
 	$(call if_changed,mkdtimg,4096) # align dtbo.img to 4kB
+endif
 
 install:
 	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \

@@ -331,8 +331,10 @@ dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
 
 # mkdtimg
 #----------------------------------------------------------------------------
+ifeq ($(CONFIG_BUILD_ARM64_DTBO_IMG),y)
 quiet_cmd_mkdtimg = DTBOIMG $@
 cmd_mkdtimg = python2 $(srctree)/scripts/dtc/libfdt/mkdtboimg.py create $@ --page_size=4096 $(filter-out FORCE,$^)
+endif
 
 # cat
 # ---------------------------------------------------------------------------
