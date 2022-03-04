@@ -58,6 +58,7 @@
 #define SCLK_HZ (32768)
 #define PSCI_POWER_STATE(reset) (reset << 30)
 #define PSCI_AFFINITY_LEVEL(lvl) ((lvl & 0x3) << 24)
+#define BIAS_HYST (bias_hyst * NSEC_PER_MSEC)
 
 #define MAX_S2IDLE_CPU_ATTEMPTS  24   /* divide by # cpus for max suspends */
 
@@ -605,23 +606,36 @@ static void clear_predict_history(void)
 
 static void update_history(struct cpuidle_device *dev, int idx);
 
+static inline bool is_cpu_biased(int cpu, uint64_t *bias_time)
+{
+	u64 now = sched_clock();
+	u64 last = sched_get_cpu_last_busy_time(cpu);
+	u64 diff = 0;
+
+	if (!last)
+		return false;
+
+	diff = now - last;
+	if (diff < BIAS_HYST) {
+		*bias_time = BIAS_HYST - diff;
+		return true;
+	}
+
+	return false;
+}
+
 static inline bool lpm_disallowed(s64 sleep_us, int cpu, struct lpm_cpu *pm_cpu)
 {
 	uint64_t bias_time = 0;
 
-	if (cpu_isolated(cpu))
-		goto out;
-
-	if (sleep_disabled)
+	if (sleep_disabled && !cpu_isolated(cpu))
 		return true;
 
-	bias_time = sched_lpm_disallowed_time(cpu);
-	if (bias_time) {
+	if (is_cpu_biased(cpu, &bias_time) && (!cpu_isolated(cpu))) {
 		pm_cpu->bias = bias_time;
 		return true;
 	}
 
-out:
 	if (sleep_us < 0)
 		return true;
 
