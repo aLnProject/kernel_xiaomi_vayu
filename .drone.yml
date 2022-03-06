@@ -1,0 +1,19 @@
+clone:
+  depth: 1
+kind: pipeline
+name: VAYU
+steps:
+  - name: val
+    image: ubuntu:latest
+    commands:
+      - apt-get update && apt-get install -y bison build-essential bc bison curl libssl-dev git zip python python3 flex cpio libncurses5-dev wget llvm lld
+      - curl https://raw.githubusercontent.com/alanndz/scripts/master/ci/vayu/ci.sh | bash
+    environment:
+      TELE_TOKEN:
+        from_secret: TOKEN
+      TELE_ID:
+        from_secret: CHAT_ID
+      CODENAME:
+        from_secret: CODENAME
+      DISABLE_LTO:
+        from_secret: LTO
