@@ -13,6 +13,5 @@ steps:
         from_secret: TOKEN
       TELE_ID:
         from_secret: CHAT_ID
-      CODENAME: Bianka
-      DISABLE_LTO:
-        from_secret: LTO
+      CODENAME: Bianka-v1.5
+      DISABLE_LTO: 1
