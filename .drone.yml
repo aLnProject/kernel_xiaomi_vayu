@@ -13,7 +13,6 @@ steps:
         from_secret: TOKEN
       TELE_ID:
         from_secret: CHAT_ID
-      CODENAME:
-        from_secret: CODENAME
+      CODENAME: Bianka
       DISABLE_LTO:
         from_secret: LTO
