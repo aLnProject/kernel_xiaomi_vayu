@@ -1113,8 +1113,9 @@ static void __armv8pmu_probe_pmu(void *info)
 	pmceid[0] = pmceid_raw[0] >> 32;
 	pmceid[1] = pmceid_raw[1] >> 32;
 
-	bitmap_from_arr32(cpu_pmu->pmceid_ext_bitmap,
-			     pmceid, ARMV8_PMUV3_MAX_COMMON_EVENTS);
+	bitmap_from_u32array(cpu_pmu->pmceid_ext_bitmap,
+			     ARMV8_PMUV3_MAX_COMMON_EVENTS, pmceid,
+			     ARRAY_SIZE(pmceid));
 
 	/* store PMMIR_EL1 register for sysfs */
 	if (pmuver >= ID_AA64DFR0_PMUVER_8_4 && (pmceid_raw[1] & BIT(31)))
