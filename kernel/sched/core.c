@@ -1481,6 +1481,40 @@ static void __init init_uclamp(void)
 	}
 }
 
+#ifdef CONFIG_SMP
+unsigned int uclamp_task(struct task_struct *p)
+{
+	unsigned long util;
+
+	util = task_util_est(p);
+	util = max(util, uclamp_eff_value(p, UCLAMP_MIN));
+	util = min(util, uclamp_eff_value(p, UCLAMP_MAX));
+
+	return util;
+}
+
+bool uclamp_boosted(struct task_struct *p)
+{
+	return uclamp_eff_value(p, UCLAMP_MIN) > 0;
+}
+
+bool uclamp_latency_sensitive(struct task_struct *p)
+{
+#ifdef CONFIG_UCLAMP_TASK_GROUP
+	struct cgroup_subsys_state *css = task_css(p, cpu_cgrp_id);
+	struct task_group *tg;
+
+	if (!css)
+		return false;
+	tg = container_of(css, struct task_group, css);
+
+	return tg->latency_sensitive;
+#else
+	return false;
+#endif
+}
+#endif /* CONFIG_SMP */
+
 #else /* CONFIG_UCLAMP_TASK */
 static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
 static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
