@@ -7724,10 +7724,6 @@ static inline int find_best_target(struct task_struct *p, int *backup_cpu,
 			if (sched_cpu_high_irqload(i))
 				continue;
 
-			/* Skip CPUs which do not fit task requirements */
-			if (capacity_of(i) < uclamp_task_util(p))
-				continue;
-
 			/*
 			 * p's blocked utilization is still accounted for on prev_cpu
 			 * so prev_cpu will receive a negative bias due to the double
@@ -7762,6 +7758,9 @@ static inline int find_best_target(struct task_struct *p, int *backup_cpu,
 			 * sure the task fits in that cpu after considering
 			 * capacity margin.
 			 */
+#ifdef CONFIG_UCLAMP_TASK
+			new_util = uclamp_util_with(cpu_rq(i), new_util, p);
+#endif
 			new_util = max(min_util, new_util);
 			if ((!(prefer_idle && idle_cpu(i)) &&
 			     new_util > capacity_orig) ||
