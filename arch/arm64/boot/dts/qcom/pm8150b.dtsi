@@ -746,20 +746,4 @@
 			};
 		};
 	};
-
-	soc-monitor {
-		polling-delay-passive = <100>;
-		polling-delay = <0>;
-		thermal-governor = "user_space";
-		thermal-sensors = <&bcl_soc>;
-		wake-capable-sensor;
-		tracks-low;
-		trips {
-			active-config0 {
-				temperature = <10>;
-				hysteresis = <0>;
-				type = "passive";
-			};
-		};
-	};
 };
