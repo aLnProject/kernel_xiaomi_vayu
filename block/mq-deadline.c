@@ -197,7 +197,6 @@ static inline int deadline_check_fifo(struct deadline_data *dd, int ddir)
  */
 static struct request *__dd_dispatch_request(struct deadline_data *dd)
 {
-	struct deadline_data *dd = hctx->queue->elevator->elevator_data;
 	struct request *rq;
 	bool reads, writes;
 	int data_dir;
